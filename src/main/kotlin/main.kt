@@ -12,14 +12,11 @@ fun searchLicenseInDirectory(file: File): Set<String> {
 
 fun searchLicenseInFile(file: File): String {
     if (file.isDirectory) return ""
-    val builder = StringBuilder()
-    var linesRead = 0
-    file.forEachLine {
-        if (linesRead > 50) return@forEachLine // We assume that header isn't more than 50 lines long (for the sake of speed)
-        linesRead++
-        builder.append(it)
-    }
-    val s = builder.toString()
+    val s = file.useLines { lines: Sequence<String> ->
+        lines
+                .take(50) // We assume that header isn't more than 50 lines
+                .toList()
+    }.joinToString("\n")
     return when { // Here we consider distinctive parts of licenses in question.
         "GNU General Public License" in s && "Version 3" in s -> {
             "GPL-3.0"
@@ -45,15 +42,15 @@ fun searchLicenseInFile(file: File): String {
 fun main(args: Array<String>) {
     print("Please, enter full path to directory: ")
     var path = readLine()!!
-    if (path[path.lastIndex - 1] != '/') {
+    if (path.last() != '/') {
         path += '/'
     }
     val mainLicenseFile = when { // Look at main license file
-        File(path + "LICENSE").exists() -> {
-            File(path + "LICENSE")
+        File("${path}LICENSE").exists() -> {
+            File("${path}LICENSE")
         }
-        File(path + "LICENSE.txt").exists() -> {
-            File(path + "LICENSE.txt")
+        File("${path}LICENSE.txt").exists() -> {
+            File("${path}LICENSE.txt")
         }
         else -> {
             null
@@ -70,13 +67,20 @@ fun main(args: Array<String>) {
         println("No file found for main license.")
     }
     val list = searchLicenseInDirectory(File(path)).toTypedArray()
-    print("Project also contains ")
-    if (list.size == 1) {
-        print("${list[0]} license in other files.")
-    } else { // Pretty print for all licenses
-        for (i in 0 until list.size - 2) {
-            print("${list[i]}, ")
+    when {
+        list.isEmpty() -> {
+            print("Project doesn't contain other licenses.")
         }
-        print("${list[list.size - 2]} and ${list[list.size - 1]} licenses in other files.")
+        list.size == 1 -> {
+            print("Project also contains ${list[0]} license in other files.")
+
+        }
+        else -> { // Pretty print for all licenses
+            print("Project also contains ")
+            for (el in list.dropLast(2)) {
+                print("$el, ")
+            }
+            print("${list[list.size - 2]} and ${list[list.size - 1]} licenses in other files.")
+        }
     }
 }
