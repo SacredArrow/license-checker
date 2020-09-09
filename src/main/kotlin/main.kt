@@ -3,10 +3,12 @@ import java.io.File
 
 fun main(args: Array<String>) {
     print("Please, enter full path to directory: ")
+
     var path = readLine()!!
     if (path.last() != '/') {
         path += '/'
     }
+
     val mainLicenseFile = when { // Look at main license file (if exists)
         File("${path}LICENSE").exists() -> {
             File("${path}LICENSE")
@@ -18,6 +20,7 @@ fun main(args: Array<String>) {
             null
         }
     }
+
     if (mainLicenseFile != null) {
         val result = Searcher.searchLicenseInFile(mainLicenseFile)
         if (result == "") {
@@ -28,6 +31,7 @@ fun main(args: Array<String>) {
     } else {
         println("No file found for main license.")
     }
+
     val list = Searcher.searchLicenseInDirectory(File(path)).toTypedArray()
     when { // Pretty print for all licenses
         list.isEmpty() -> {
