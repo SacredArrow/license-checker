@@ -1,7 +1,7 @@
 import java.io.File
 
 
-fun main(args: Array<String>) {
+fun main() {
     print("Please, enter full path to directory: ")
 
     var path = readLine()!!
