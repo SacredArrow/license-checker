@@ -6,7 +6,7 @@ class Searcher {
         private const val maxLinesInHeader = 50 // We assume that header isn't more than 50 lines
         private val predicates: Map<String, (String) -> Boolean> = mapOf( // Easy to add/change conditions
                 "MIT" to { "MIT License" in it },
-                "LGPL-3.0" to { "GNU Lesser General Public License" in it && "Version 3" in it},
+                "LGPL-3.0" to { "GNU Lesser General Public License" in it && "Version 3" in it },
                 "BSD-3-Clause" to { "Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:" in it },
                 "Apache-2.0" to { "Apache License, Version 2.0" in it },
                 "GPL-3.0" to { "GNU General Public License" in it && "Version 3" in it }

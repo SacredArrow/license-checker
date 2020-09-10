@@ -39,7 +39,6 @@ fun main() {
         }
         list.size == 1 -> {
             print("Project also contains ${list[0]} license in other files.")
-
         }
         else -> {
             print("Project also contains ")
