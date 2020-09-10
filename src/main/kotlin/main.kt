@@ -43,10 +43,8 @@ fun main(args: Array<String>) {
         }
         else -> {
             print("Project also contains ")
-            for (el in list.dropLast(2)) {
-                print("$el, ")
-            }
-            print("${list[list.size - 2]} and ${list[list.size - 1]} licenses in other files.")
+            print(list.dropLast(1).joinToString(separator = ", "))
+            print(" and ${list.last()} licenses in other files.")
         }
     }
 }

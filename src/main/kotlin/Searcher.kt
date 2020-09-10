@@ -3,7 +3,7 @@ import java.io.FileNotFoundException
 
 class Searcher {
     companion object {
-        private const val maxLinesInHeader = 50
+        private const val maxLinesInHeader = 50 // We assume that header isn't more than 50 lines
         private val predicates: Map<String, (String) -> Boolean> = mapOf( // Easy to add/change conditions
                 "MIT" to { "MIT License" in it },
                 "LGPL-3.0" to { "GNU Lesser General Public License" in it && "Version 3" in it},
@@ -13,14 +13,7 @@ class Searcher {
         )
 
         fun searchLicenseInDirectory(file: File): Set<String> {
-            val result: MutableSet<String> = HashSet()
-            file.walk(FileWalkDirection.BOTTOM_UP).forEach {
-                val res = searchLicenseInFile(it)
-                if (res != "") {
-                    result.add(res)
-                }
-            }
-            return result
+            return file.walk(FileWalkDirection.BOTTOM_UP).map { searchLicenseInFile(it) }.filter { it != "" }.toMutableSet() // Find all licensed entries, then leave one of each
         }
 
         fun searchLicenseInFile(file: File): String {
@@ -29,7 +22,7 @@ class Searcher {
             try {
                 s = file.useLines { lines: Sequence<String> ->
                     lines
-                            .take(maxLinesInHeader) // We assume that header isn't more than 50 lines
+                            .take(maxLinesInHeader)
                             .toList()
                 }.joinToString("\n")
             } catch (e: FileNotFoundException) {
