@@ -38,7 +38,7 @@ fun main() {
             print("Project doesn't contain other licenses.")
         }
         list.size == 1 -> {
-            print("Project also contains ${list[0]} license in other files.")
+            print("Project also contains ${list.first()} license in other files.")
         }
         else -> {
             print("Project also contains ")
