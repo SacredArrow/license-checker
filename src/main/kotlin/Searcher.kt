@@ -12,11 +12,13 @@ class Searcher {
                             "3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission." in it
                 },
                 "Apache-2.0" to { "Apache License, Version 2.0" in it },
-                "GPL-3.0" to { "GNU General Public License" in it && "Version 3" in it }
+                "GPL-3.0" to { "GNU General Public License" in it && "Version 3" in it },
+                "GPL-2.0" to { "GNU General Public License" in it && "Version 2" in it }
+        // Add more licenses here
         )
 
-        fun searchLicenseInDirectory(file: File): Set<String> {
-            return file.walk(FileWalkDirection.BOTTOM_UP).map { searchLicenseInFile(it) }.filter { it != "" }.toMutableSet() // Find all licensed entries, then leave one of each
+        fun searchLicenseInDirectory(file: File, ignoredFile: File?): Set<String> {
+            return file.walk(FileWalkDirection.BOTTOM_UP).map { if (it != ignoredFile) searchLicenseInFile(it) else "" }.filter { it != "" }.toMutableSet() // Find all licensed entries, then leave one of each
         }
 
         fun searchLicenseInFile(file: File): String {

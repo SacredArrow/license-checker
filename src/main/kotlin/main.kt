@@ -32,18 +32,18 @@ fun main() {
         println("No file found for main license.")
     }
 
-    val licenses = Searcher.searchLicenseInDirectory(File(path)).toTypedArray()
+    val list = Searcher.searchLicenseInDirectory(File(path), mainLicenseFile).toTypedArray() // We use ignoredFile argument to search in main license file only once.
     when { // Pretty print for all licenses
-        licenses.isEmpty() -> {
+        list.isEmpty() -> {
             print("Project doesn't contain other licenses.")
         }
-        licenses.size == 1 -> {
-            print("Project also contains ${licenses.first()} license in other files.")
+        list.size == 1 -> {
+            print("Project also contains ${list.first()} license in other files.")
         }
         else -> {
             print("Project also contains ")
-            print(licenses.dropLast(1).joinToString(separator = ", "))
-            print(" and ${licenses.last()} licenses in other files.")
+            print(list.dropLast(1).joinToString(separator = ", "))
+            print(" and ${list.last()} licenses in other files.")
         }
     }
 }
